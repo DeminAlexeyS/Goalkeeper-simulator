@@ -125,7 +125,18 @@ table.log td .who{color:var(--ink-soft);display:block;font-size:11.5px}
   .lbl{margin:10px 0 5px}
 }
 @media (max-width:520px){ .modes{grid-template-columns:1fr} .sumgrid{grid-template-columns:1fr 1fr} }
-@media (prefers-reduced-motion:reduce){ .info{transition:none} }
+/* экран «Поверни телефон»: только телефоны в вертикальном положении */
+.rotlock{display:none;position:fixed;inset:0;z-index:50;background:var(--bg);color:#fafaf6;
+  flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;
+  padding:24px max(24px,env(safe-area-inset-right)) 24px max(24px,env(safe-area-inset-left))}
+.rotlock h2{margin:8px 0 0;font-size:28px;font-weight:800;letter-spacing:-.02em;text-wrap:balance}
+.rotlock p{margin:0;max-width:300px;font-size:15px;line-height:1.45;color:rgba(250,250,246,.72);text-wrap:balance}
+.rotarrows{stroke:var(--signal)}
+.rotphone rect{fill:rgba(250,250,246,.08);stroke:#fafaf6} .rotphone line{stroke:#fafaf6}
+.rotphone{transform-box:view-box;transform-origin:80px 80px;animation:rotphone 2.6s ease-in-out infinite}
+@keyframes rotphone{0%,18%{transform:rotate(0)} 48%,78%{transform:rotate(90deg)} 100%{transform:rotate(0)}}
+@media (orientation:portrait) and (pointer:coarse) and (max-width:700px){ .rotlock{display:flex} }
+@media (prefers-reduced-motion:reduce){ .info{transition:none} .rotphone{animation:none;transform:rotate(90deg)} }
 </style>
 </head>
 <body>
@@ -160,6 +171,21 @@ table.log td .who{color:var(--ink-soft);display:block;font-size:11.5px}
 </div>
 
 <div class="flash hidden" id="flash"></div>
+
+<div class="rotlock" id="rotlock" role="alertdialog" aria-labelledby="rotTitle" aria-describedby="rotSub">
+  <svg class="rotart" viewBox="0 0 160 160" width="170" height="170" aria-hidden="true">
+    <g class="rotarrows" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M39 39 A58 58 0 0 1 121 39"/><path d="M117.4 25.6 L121 39 L107.6 35.4"/>
+      <path d="M121 121 A58 58 0 0 1 39 121"/><path d="M52.4 124.6 L39 121 L42.6 134.4"/>
+    </g>
+    <g class="rotphone">
+      <rect x="58" y="38" width="44" height="84" rx="9" stroke-width="4"/>
+      <line x1="73" y1="47" x2="87" y2="47" stroke-width="3" stroke-linecap="round"/>
+    </g>
+  </svg>
+  <h2 id="rotTitle" data-i18n="rotTitle">Rotate your phone</h2>
+  <p id="rotSub" data-i18n="rotSub">The game is played with the phone held sideways.</p>
+</div>
 
 <div class="overlay" id="menu">
   <div class="card">
@@ -310,6 +336,7 @@ const I18N = {
     start: "Start series: 10 shots", bg: "Custom background", bgReset: "Remove background",
     credit: "Shot data: StatsBomb Open Data. It has no ball speed, so speed is estimated from research: penalties 65–105 km/h, free kicks 72–90, open-play shots 80–112. The trajectory (dip, curl) is reconstructed.",
     rotate: "It’s easier to play with the screen turned sideways.",
+    rotTitle: "Rotate your phone", rotSub: "The game is played with the phone held sideways.",
     kSaves: "saves", kReact: "average reaction", kStreak: "best save streak",
     thNo: "#", thShot: "Shot", thBall: "Ball went", thDive: "You dived", thReact: "Reaction", thRes: "Result",
     again: "Replay level", toMenu: "Menu", next: "Next", results: "Results",
@@ -353,6 +380,7 @@ const I18N = {
     start: "Lancer la série : 10 tirs", bg: "Mon fond", bgReset: "Retirer le fond",
     credit: "Données des tirs : StatsBomb Open Data. La vitesse du ballon n’y figure pas, elle est estimée d’après des études : penalties 65–105 km/h, coups francs 72–90, tirs dans le jeu 80–112. La trajectoire (lob, effet) est reconstituée.",
     rotate: "C’est plus facile de jouer avec l’écran à l’horizontale.",
+    rotTitle: "Tourne ton téléphone", rotSub: "Le jeu se joue avec le téléphone à l’horizontale.",
     kSaves: "arrêts", kReact: "réaction moyenne", kStreak: "meilleure série d’arrêts",
     thNo: "N°", thShot: "Tir", thBall: "Ballon arrivé", thDive: "Ton plongeon", thReact: "Réaction", thRes: "Résultat",
     again: "Rejouer le niveau", toMenu: "Menu", next: "Suivant", results: "Bilan",
@@ -396,6 +424,7 @@ const I18N = {
     start: "Начать серию: 10 ударов", bg: "Свой фон", bgReset: "Убрать фон",
     credit: "Данные об ударах: StatsBomb Open Data. Скорости мяча в данных нет, она оценочная по исследованиям: пенальти 65–105 км/ч, штрафные 72–90, удары с игры 80–112. Траектория (навес, закрутка) достроена.",
     rotate: "Удобнее играть, повернув экран горизонтально.",
+    rotTitle: "Поверни телефон", rotSub: "В игру играют, держа телефон горизонтально.",
     kSaves: "сейвов", kReact: "средняя реакция", kStreak: "лучшая серия сейвов",
     thNo: "№", thShot: "Удар", thBall: "Мяч пришёл", thDive: "Ты прыгнул", thReact: "Реакция", thRes: "Итог",
     again: "Повторить уровень", toMenu: "Меню", next: "Дальше", results: "Итоги",
@@ -936,7 +965,17 @@ function draw() {
     ctx.beginPath(); ctx.arc(taps[i].x, taps[i].y, 10 + p * 34, 0, 7); ctx.stroke(); ctx.restore();
   }
 }
+const LOCK_MQ = window.matchMedia ? matchMedia('(orientation: portrait) and (pointer: coarse) and (max-width: 700px)') : { matches: false };
 function update() {
+  // телефон держат вертикально: игра на паузе; если мяч уже летел, удар начинается заново
+  if (LOCK_MQ.matches) {
+    if (shot && (state === 'aim' || state === 'flight')) {
+      state = 'aim'; shot.pick = null; shot.react = null; shot.trail = []; shot.kickAt = Infinity;
+      $('iCue').textContent = t('ready');
+    }
+    return;
+  }
+  if (state === 'aim' && shot.kickAt === Infinity) shot.kickAt = now + 1.5;
   if (state === 'aim' && now >= shot.kickAt) {
     state = 'flight'; shot.kickT = now; SFX.kick();
     $('iCue').textContent = t('kick');
