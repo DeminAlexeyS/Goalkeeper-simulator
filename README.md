@@ -2,7 +2,7 @@
 
 Developed by **CYFRON SOFTWARE TRADING**.
 
-A browser game where you are the goalkeeper. A real shot is struck at your goal, and you have a fraction of a second to pick where to dive.
+A browser game where you are taking on responsibilities of the goalkeeper. A real shot is struck at your goal, and you have a fraction of a second to pick where to dive.
 
 Every shot comes from a real match: the shooting position and the point where the ball reached the goal are taken from World Cup, Euro, Champions League, La Liga, Bundesliga and Copa América games. In penalty mode you face real penalties by Messi, Ronaldo, Kane and others, and you see each taker's habits before the kick.
 
