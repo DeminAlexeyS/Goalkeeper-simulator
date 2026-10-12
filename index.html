@@ -21,6 +21,8 @@
   --save:#1f9d55;
   --goal:#d63b2f;
   --mmw:150px;
+  --cut:0px;
+  --bot:max(12px,env(safe-area-inset-bottom,0px));
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
@@ -32,14 +34,15 @@
 :root[data-theme="dark"]{ --bg:#121b16; --paper:rgba(246,246,240,.9); }
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-html,body{height:100%;height:100dvh;margin:0;overscroll-behavior:none;touch-action:manipulation}
-body{background:var(--bg);color:var(--ink);overflow:hidden;position:relative;
+html{height:100%}
+html,body{margin:0;overscroll-behavior:none;touch-action:manipulation}
+body{background:var(--bg);color:var(--ink);overflow:hidden;position:fixed;inset:0;
   -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
 canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 button:focus-visible,label:focus-within{outline:2px solid var(--signal);outline-offset:2px}
 
-.hud{position:absolute;top:10px;left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));
+.hud{position:absolute;top:max(10px,env(safe-area-inset-top,0px));left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));
   display:flex;justify-content:space-between;align-items:center;gap:8px;pointer-events:none}
 .hud .group{display:flex;gap:6px;align-items:center}
 .chip{background:var(--paper);border-radius:8px;padding:6px 10px;font-size:13px;font-weight:600;line-height:1.1;
@@ -49,7 +52,7 @@ button:focus-visible,label:focus-within{outline:2px solid var(--signal);outline-
 .hbtn.off .w{display:none} .hbtn:not(.off) .x{display:none}
 .hbtn{pointer-events:auto;background:var(--paper);border-radius:8px;width:32px;height:30px;display:grid;place-items:center;font-size:15px;font-weight:700}
 
-.info{position:absolute;bottom:12px;left:calc(var(--mmw) + 28px + env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right));
+.info{position:absolute;bottom:calc(var(--bot) + var(--cut));left:calc(var(--mmw) + 28px + env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right));
   margin:0 auto;pointer-events:none;background:var(--paper);border-radius:12px;padding:9px 14px;max-width:520px;
   transition:opacity .25s}
 .info .main{font-size:15px;font-weight:700}
@@ -59,8 +62,8 @@ button:focus-visible,label:focus-within{outline:2px solid var(--signal);outline-
 .info.dim{opacity:.55}
 .hidden{display:none!important}
 
-.result{position:absolute;top:50%;transform:translateY(-50%);left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));
-  margin-left:auto;margin-right:auto;max-width:600px;max-height:calc(100% - 24px);overflow:auto;background:var(--paper-solid);border-radius:12px;padding:12px 12px 12px 16px;
+.result{position:absolute;top:calc((100% - var(--cut)) / 2);transform:translateY(-50%);left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));
+  margin-left:auto;margin-right:auto;max-width:600px;max-height:calc(100% - var(--cut) - 24px);overflow:auto;background:var(--paper-solid);border-radius:12px;padding:12px 12px 12px 16px;
   display:flex;align-items:center;gap:12px;box-shadow:0 10px 36px rgba(0,0,0,.35)}
 @media (max-width:520px){ .result{flex-direction:column;align-items:stretch;padding:14px} .result .primary{width:100%} }
 .result .txt{flex:1;min-width:0}
@@ -71,7 +74,7 @@ button:focus-visible,label:focus-within{outline:2px solid var(--signal);outline-
 .primary{background:var(--signal);color:var(--signal-ink);font-weight:700;border-radius:10px;padding:12px 18px;font-size:15px;white-space:nowrap}
 .primary.small{padding:10px 14px;font-size:14px}
 
-.overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:14px;
+.overlay{position:absolute;inset:0;bottom:var(--cut);display:flex;align-items:center;justify-content:center;padding:14px;
   background:rgba(14,22,17,.42);overflow:auto}
 .card{background:var(--paper-solid);border-radius:16px;padding:22px 24px;width:min(560px,100%);margin:auto;box-shadow:0 18px 50px rgba(0,0,0,.3)}
 .card h1{margin:0;font-size:30px;line-height:1.05;font-weight:800;letter-spacing:-.025em}
@@ -108,7 +111,7 @@ button:focus-visible,label:focus-within{outline:2px solid var(--signal);outline-
 .check{display:flex;gap:10px;align-items:flex-start;font-size:14px;font-weight:600;margin-top:14px;cursor:pointer;line-height:1.35}
 .check input{width:18px;height:18px;margin:1px 0 0;accent-color:var(--signal);flex:none}
 .check small{display:block;font-weight:400;color:var(--ink-soft);font-size:12.5px;margin-top:2px}
-.flash{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;background:var(--paper-solid);
+.flash{position:absolute;top:calc((100% - var(--cut)) / 2);left:50%;transform:translate(-50%,-50%);pointer-events:none;background:var(--paper-solid);
   border-radius:12px;padding:8px 22px;font-size:22px;font-weight:800;box-shadow:0 6px 24px rgba(0,0,0,.25)}
 .flash.ok{color:var(--save)} .flash.bad{color:var(--goal)}
 .card.wide{width:min(760px,100%)}
@@ -492,16 +495,30 @@ function P(x, y, z) {
 }
 
 /* ---------- размеры ---------- */
+let CUT = 0, BOT = 12, VH = 0, lastSize = '';
+const probe = document.createElement('div');
+probe.style.cssText = 'position:fixed;left:0;bottom:0;width:0;visibility:hidden;pointer-events:none;padding-bottom:env(safe-area-inset-bottom,0px)';
+document.body.appendChild(probe);
+function sizeKey() { const v = window.visualViewport; return [cv.clientWidth, cv.clientHeight, v ? Math.round(v.height) : 0, v ? Math.round(v.offsetTop) : 0].join('x'); }
 function resize() {
   const r = cv.getBoundingClientRect();
   W = r.width; H = r.height;
+  // Часть экрана может быть скрыта панелями браузера (Android, полноэкранный режим):
+  // берём реально видимую высоту и поднимаем всё нижнее над скрытой полосой.
+  const v = window.visualViewport;
+  CUT = v ? Math.max(0, Math.round(r.bottom - (v.offsetTop + v.height))) : 0;
+  if (CUT > H * 0.35) CUT = 0;                     // экранная клавиатура и т. п. — не считаем
+  VH = H - CUT;
+  BOT = Math.max(12, parseFloat(getComputedStyle(probe).paddingBottom) || 0) + CUT;
+  document.documentElement.style.setProperty('--cut', CUT + 'px');
+  lastSize = sizeKey();
   DPR = Math.min(window.devicePixelRatio || 1, 2);
   cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  F = Math.min(0.82 * W * CAM.d / GW, 0.52 * H * CAM.d / GH);
+  F = Math.min(0.82 * W * CAM.d / GW, 0.52 * VH * CAM.d / GH);
   CX = W / 2;
   const gp = F * GH / CAM.d;
-  const top = Math.max(H * 0.15, (H - gp) / 2 - H * 0.04);
+  const top = Math.max(VH * 0.15, (VH - gp) / 2 - VH * 0.04);
   HY = top + F * (GH - CAM.y) / CAM.d;
   MMW = Math.round(clamp(W * 0.16, 96, 160));
   document.documentElement.style.setProperty('--mmw', MMW + 'px');
@@ -923,7 +940,7 @@ function drawMarker() {
 function drawMini() {
   if (!shot || state === 'menu' || state === 'summary') return;
   const mw = MMW, mh = Math.round(mw * 0.66), pad = 6;
-  const ox = Math.max(12, 12), oy = H - mh - 12;
+  const ox = 12, oy = H - mh - BOT;
   const sx = x => ox + pad + (x + 24) / 48 * (mw - 2 * pad);
   const sz = z => oy + pad + z / 30 * (mh - 2 * pad);
   ctx.save();
@@ -1000,7 +1017,7 @@ function update() {
     series.i >= SHOTS ? endSeries() : nextShot();
   }
 }
-function frame(t) { now = t / 1000; update(); draw(); requestAnimationFrame(frame); }
+function frame(t) { now = t / 1000; if (sizeKey() !== lastSize) resize(); update(); draw(); requestAnimationFrame(frame); }
 
 /* ---------- ввод ---------- */
 const taps = [];
@@ -1040,7 +1057,8 @@ function goFullscreen() {
     if (p && p.catch) p.catch(() => {});
   } catch (e) {}
 }
-document.addEventListener('fullscreenchange', () => setTimeout(resize, 100));
+document.addEventListener('fullscreenchange', () => { setTimeout(resize, 100); setTimeout(resize, 500); });
+if (window.visualViewport) visualViewport.addEventListener('resize', resize);
 cv.addEventListener('contextmenu', e => e.preventDefault());
 const CODES = { KeyQ: 0, KeyW: 1, KeyE: 2, KeyA: 3, KeyS: 4, KeyD: 5 };
 const KEYS = { q: 0, w: 1, e: 2, a: 3, s: 4, d: 5, 'й': 0, 'ц': 1, 'у': 2, 'ф': 3, 'ы': 4, 'в': 5 };
