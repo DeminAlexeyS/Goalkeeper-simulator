@@ -59,9 +59,10 @@ button:focus-visible,label:focus-within{outline:2px solid var(--signal);outline-
 .info.dim{opacity:.55}
 .hidden{display:none!important}
 
-.result{position:absolute;bottom:12px;left:calc(var(--mmw) + 28px + env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right));
-  margin-left:auto;margin-right:auto;max-width:600px;background:var(--paper-solid);border-radius:12px;padding:10px 12px 10px 14px;
-  display:flex;align-items:center;gap:12px;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+.result{position:absolute;top:50%;transform:translateY(-50%);left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));
+  margin-left:auto;margin-right:auto;max-width:600px;max-height:calc(100% - 24px);overflow:auto;background:var(--paper-solid);border-radius:12px;padding:12px 12px 12px 16px;
+  display:flex;align-items:center;gap:12px;box-shadow:0 10px 36px rgba(0,0,0,.35)}
+@media (max-width:520px){ .result{flex-direction:column;align-items:stretch;padding:14px} .result .primary{width:100%} }
 .result .txt{flex:1;min-width:0}
 .result .title{font-size:20px;font-weight:800;letter-spacing:-.01em}
 .result.ok .title{color:var(--save)} .result.bad .title{color:var(--goal)}
@@ -107,7 +108,7 @@ button:focus-visible,label:focus-within{outline:2px solid var(--signal);outline-
 .check{display:flex;gap:10px;align-items:flex-start;font-size:14px;font-weight:600;margin-top:14px;cursor:pointer;line-height:1.35}
 .check input{width:18px;height:18px;margin:1px 0 0;accent-color:var(--signal);flex:none}
 .check small{display:block;font-weight:400;color:var(--ink-soft);font-size:12.5px;margin-top:2px}
-.flash{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);pointer-events:none;background:var(--paper-solid);
+.flash{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;background:var(--paper-solid);
   border-radius:12px;padding:8px 22px;font-size:22px;font-weight:800;box-shadow:0 6px 24px rgba(0,0,0,.25)}
 .flash.ok{color:var(--save)} .flash.bad{color:var(--goal)}
 .card.wide{width:min(760px,100%)}
